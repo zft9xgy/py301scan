@@ -1,0 +1,42 @@
+import os
+import requests
+import hashlib
+import configparser
+
+# Script description:
+# This script caches the content of URLs from a list to reduce redundant network requests.
+
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+INPUT_FILE = config['DEFAULT']['URLS_FILE']
+CACHE_DIR = config['DEFAULT']['CACHE_DIR']
+
+# Asegurarse de que el directorio cache existe
+if not os.path.exists(CACHE_DIR):
+    os.makedirs(CACHE_DIR)
+
+
+def save_content_to_cache(url):
+    # Genera un nombre de archivo seguro a partir de la URL
+    filename = hashlib.md5(url.encode()).hexdigest() + ".html"
+    filepath = os.path.join(CACHE_DIR, filename)
+
+    # Si el archivo ya existe, simplemente regresa (ya está en caché)
+    if os.path.exists(filepath):
+        return
+
+    # Si no existe, haz una solicitud y guarda el contenido en el archivo
+    content = requests.get(url).text
+    with open(filepath, 'w', encoding='utf-8') as file:
+        file.write(content)
+
+
+# Leer la lista de URLs y guardarlas en caché
+with open(INPUT_FILE, "r") as file:
+    urls = file.read().splitlines()
+
+for url in urls:
+    save_content_to_cache(url)
+
+print("Caché creado.")

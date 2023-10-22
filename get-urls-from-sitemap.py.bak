@@ -1,0 +1,33 @@
+import requests
+from bs4 import BeautifulSoup
+import configparser
+
+# Script description:
+# This script extracts URLs from a sitemap and saves them in a file.
+
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+SITEMAP_URL = config['DEFAULT']['SITEMAP_URL']
+
+
+# Realizar una solicitud HTTP para obtener el contenido del sitemap
+response = requests.get(SITEMAP_URL)
+
+if response.status_code == 200:
+    # Analizar el contenido XML con BeautifulSoup
+    soup = BeautifulSoup(response.text, "xml")
+
+    # Encontrar todas las etiquetas <loc> que contienen las URL
+    loc_tags = soup.find_all("loc")
+
+    # Filtrar y extraer las URL que no contienen "/wp-content/" y guardarlas en un archivo
+    with open("urls.txt", "w") as file:
+        for loc in loc_tags:
+            url = loc.text
+            if "/wp-content/" not in url:
+                file.write(url + "\n")
+
+    print("Las URL se han guardado en 'lista_de_urls.txt', evitando las que contienen '/wp-content/'.")
+else:
+    print("No se pudo obtener el sitemap. Código de estado:", response.status_code)
