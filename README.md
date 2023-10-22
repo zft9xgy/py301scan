@@ -88,3 +88,9 @@ This script is designed to handle multilingual websites. When given a list of UR
 - 3 Based on the defined prefixes or language indicators in the URL, the script will categorize and save them into separate files. For instance, URLs with a "/es/" prefix indicating Spanish content might be saved to urls/es.txt.
 
 Note: The use of this script is specific and might not be necessary for every user. It's a custom solution designed for the specific needs of handling URLs from multilingual websites. After categorizing, when using the alpha-find script, one can easily switch to the URL list of a specific language.
+
+## TODO
+
+- develop 301 link finder
+- alpha-find.py, ask for cache use.
+- cache directory, one cache directory per website maybe?
