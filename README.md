@@ -50,19 +50,19 @@ The `py301scan` project aims to help users manage and rectify URLs on large or m
 1. If you don't have a list of URLs and want to generate one from a sitemap:
 
    ```bash
-   python get-urls-from-sitemap.py
+   python3 get-urls-from-sitemap.py
    ```
 
 2. To cache the webpages locally for faster repeated checks, use:
 
    ```bash
-   python create-cache.py
+   python3 create-cache.py
    ```
 
 3. To search for a specific URL within your list:
 
    ```bash
-   python alpha-find.py
+   python3 alpha-find.py
    ```
 
 4. (Pending) Once the 301 checker is developed, it will be added to the usage steps.

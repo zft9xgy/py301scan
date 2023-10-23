@@ -1,3 +1,5 @@
-requests>=2.25.1
-beautifulsoup4>=4.9.3
-tqdm>=4.56.0
+# To install requirements uso pip3 install -r requirements
+requests>=2.24.0
+beautifulsoup4>=4.9.1
+tqdm>=4.48.0
+configparser>=5.0.0
