@@ -17,6 +17,8 @@ config.read('config.ini')
 URL_TO_FIND = config['DEFAULT']['URL_TO_FIND']
 INPUT_FILE = config['DEFAULT']['URLS_FILE']
 CACHE_DIR = config['DEFAULT']['CACHE_DIR']
+CSV_DIR = config['DEFAULT']['CSV_FOLDER']
+CSV_DEFAULT_NAME = config['DEFAULT']['CSV_DEFAULT_NAME']
 
 
 def get_from_cache(url):
@@ -83,12 +85,23 @@ if response.lower().strip() == 'no':
     exit()
 
 # Solicita al usuario el nombre para el archivo CSV
-csv_filename_input = input(
-    "Introduzca el nombre del archivo CSV (presione 'Enter' para usar 'resultados.csv' por defecto): ")
-csv_filename = "csv/" + \
-    (csv_filename_input if csv_filename_input else "resultados.csv")
+csv_filename_input = input(f"Introduzca el nombre del archivo CSV (presione 'Enter' para usar '{CSV_DEFAULT_NAME}' por defecto): ")
+
+
+# Solicita al usuario el nombre para el archivo CSV
+csv_filename = csv_filename_input if csv_filename_input else CSV_DEFAULT_NAME
+
+# Asegurarse de que el nombre del archivo termine con ".csv"
 if not csv_filename.endswith(".csv"):
     csv_filename += ".csv"
+
+# Combinar el directorio y el nombre del archivo
+full_csv_path = os.path.join(CSV_DIR, csv_filename)
+
+# Asegurarse de que el directorio para el archivo CSV exista
+if not os.path.exists(CSV_DIR):
+    os.makedirs(CSV_DIR)
+
 
 # Preguntar cuántos hilos/núcleos usar
 num_threads = int(input(
@@ -114,10 +127,10 @@ with ThreadPoolExecutor(max_workers=num_threads or None) as executor:
         all_matching_links.extend(matching_links)
 
 # Escribe los resultados en un archivo CSV
-with open(csv_filename, mode='w', newline='') as csv_file:
+with open(full_csv_path, mode='w', newline='') as csv_file:
     writer = csv.writer(csv_file)
     writer.writerow(["Source", "Link", "Anchor", "Link Position"])
     for match in all_matching_links:
         writer.writerow([match[0], match[1], match[2], match[3]])
 
-print(f"Se encontraron y registraron las coincidencias en {csv_filename}")
+print(f"Se encontraron y registraron las coincidencias en {full_csv_path}")
