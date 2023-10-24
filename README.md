@@ -95,3 +95,4 @@ Note: The use of this script is specific and might not be necessary for every us
 - develop 301 link finder
 - alpha-find.py, ask for cache use.
 - cache directory, one cache directory per website maybe?
+- eliminar concurrencia, parece ser que va mas rapido con un nucleo y es mas sencillo

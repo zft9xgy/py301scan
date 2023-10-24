@@ -11,19 +11,28 @@ config = configparser.ConfigParser()
 config.read("config.ini")
 
 # Variables de configuración
-CACHE_DIR = config['DEFAULT']['CACHE_DIR']
+cache_dir = config['DEFAULT']['CACHE_DIR']
 URLS_FILE = config['DEFAULT']['URLS_FILE']
 MAX_WORKERS_DEFAULT = os.cpu_count()
 
+# input url, return bool
+
+
+def is_url_in_cache(url):
+    filename = hashlib.md5(url.encode()).hexdigest() + ".html"
+    filepath = os.path.join(cache_dir, filename)
+    return os.path.exists(filepath)
+
+
 # Asegurarse de que el directorio cache existe
-if not os.path.exists(CACHE_DIR):
-    os.makedirs(CACHE_DIR)
+if not os.path.exists(cache_dir):
+    os.makedirs(cache_dir)
 
 
 def save_content_to_cache(url):
     """ Save URL content to cache directory """
     filename = hashlib.md5(url.encode()).hexdigest() + ".html"
-    filepath = os.path.join(CACHE_DIR, filename)
+    filepath = os.path.join(cache_dir, filename)
 
     if os.path.exists(filepath):
         return  # If the file already exists, just return (it's already cached)
@@ -51,8 +60,8 @@ if confirm.lower() == "no":
 reset_cache = input(
     "Do you want to reset the cache? (yes/press enter for no): ")
 if reset_cache.lower() == "yes":
-    shutil.rmtree(CACHE_DIR)  # Remove the entire cache directory
-    os.makedirs(CACHE_DIR)  # Create an empty cache directory
+    shutil.rmtree(cache_dir)  # Remove the entire cache directory
+    os.makedirs(cache_dir)  # Create an empty cache directory
 
 # Ask the user for the number of workers
 try:
