@@ -17,7 +17,7 @@ import configparser
 
 
 #  Save the urls to the list.
-def urls_to_list(urls):
+def save_urls_to_list(urls):
     for url in urls:
         save_url_to_list(url)
 
@@ -88,7 +88,7 @@ def get_urls_from_sitemap_list(SITEMAP_LIST_DIR="./input/sitemap_list.txt"):
                 # Procesa la URL aquí, por ejemplo, imprímela
                 print("Analizando sitemap:", sitemap_url)
                 urls = extract_urls_from_sitemap(sitemap_url)
-                urls_to_list(urls)
+                save_urls_to_list(urls)
     except FileNotFoundError:
         print(f"Error: El archivo '{SITEMAP_LIST_DIR}' no se encontró.")
     except Exception as e:

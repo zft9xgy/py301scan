@@ -56,11 +56,11 @@ def save_url_list_to_cache(url_list_dir, skip_existing=True):
                 url = line.strip()
                 # Procesa la URL aquí, por ejemplo, imprímela
                 if skip_existing and is_url_in_cache(url):
-                    print(f"Skipping:{url}")
+                    print("Skipping: url already in cache:", url)
                     continue
                 else:
                     save_url_to_cache(url)
-                    print(url)
+                    print("Added to cache:", url)
     except FileNotFoundError:
         print(f"Error: El archivo '{url_list_dir}' no se encontró.")
     except Exception as e:
