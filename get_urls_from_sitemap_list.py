@@ -32,7 +32,7 @@ def save_url_to_list(url, URL_LIST_DIR="./input/urls_where_search.txt"):
         if url not in existing_urls:
             # Si la URL no existe, añadirla al archivo
             with open(URL_LIST_DIR, 'a') as file:
-                file.write(url + '\n')
+                file.write(url.strip() + '\n')
                 print("Added url:", url)
         else:
             print("skip: url already on list:", url)
