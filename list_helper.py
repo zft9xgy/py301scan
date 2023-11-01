@@ -17,12 +17,12 @@ import configparser
 
 
 #  Save the urls to the list.
-def save_urls_to_list(urls):
+def save_urls_to_filelist(urls):
     for url in urls:
         save_url_to_list(url)
 
 
-def save_url_to_list(url, URL_LIST_DIR="./input/urls_where_search.txt"):
+def save_url_to_filelist(url, URL_LIST_DIR="./input/urls_where_search.txt"):
     try:
         # Leer las URLs existentes del archivo
         with open(URL_LIST_DIR, 'r') as file:
@@ -56,7 +56,8 @@ def load_extensions_to_ignore():
     return set()  # Devolver un conjunto vacío por defecto
 
 
-def extract_urls_from_sitemap(sitemap_url):
+# this function get a puython list which contain all the urls find the provide sitemap
+def get_urls_from_sitemap(sitemap_url):
     response = requests.get(sitemap_url)
     soup = BeautifulSoup(response.text, "xml")
     loc_tags = soup.find_all("loc")
@@ -76,7 +77,7 @@ def extract_urls_from_sitemap(sitemap_url):
 
 
 # This function will take the sitemaps from the sitemap list one by one and extract the urls
-def get_urls_from_sitemap_list(SITEMAP_LIST_DIR="./input/sitemap_list.txt"):
+def save_urls_from_sitemaps_to_list(SITEMAP_LIST_DIR="./input/sitemap_list.txt"):
     try:
         with open(SITEMAP_LIST_DIR, 'r') as sitemaps_list:
             lines = sitemaps_list.readlines()
@@ -87,7 +88,7 @@ def get_urls_from_sitemap_list(SITEMAP_LIST_DIR="./input/sitemap_list.txt"):
                     continue
                 # Procesa la URL aquí, por ejemplo, imprímela
                 print("Analizando sitemap:", sitemap_url)
-                urls = extract_urls_from_sitemap(sitemap_url)
+                urls = get_urls_from_sitemap(sitemap_url)
                 save_urls_to_list(urls)
     except FileNotFoundError:
         print(f"Error: El archivo '{SITEMAP_LIST_DIR}' no se encontró.")
@@ -97,4 +98,4 @@ def get_urls_from_sitemap_list(SITEMAP_LIST_DIR="./input/sitemap_list.txt"):
 
 if __name__ == "__main__":
     print("Empezando")
-    get_urls_from_sitemap_list()
+    save_urls_from_sitemaps_to_list()

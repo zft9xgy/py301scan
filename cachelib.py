@@ -40,6 +40,7 @@ def save_url_to_cache(url):
 
 
 # Check if urls exist, if so, delete it from cache
+# TODO hacerla mas robusta teniendo en cuenta windows, linux y mac
 def delete_url_from_cache(url):
     if is_url_in_cache(url):
         os.system(f"rm {get_filepath_hashmd5(url)}")
