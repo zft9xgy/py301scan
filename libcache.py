@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 """
 Nombre del script: cachelib.py
 Descripción: El objetivo de esta libreria es proporcionar las funciones necesarias para manejar la cache.
@@ -46,6 +43,7 @@ def save_url_to_cache(url):
         file.write(content)
 
 
+
 # Check if urls exist, if so, delete it from cache
 # TO DO hacerla mas robusta teniendo en cuenta windows, linux y mac
 def delete_url_from_cache(url):
@@ -73,7 +71,6 @@ def save_url_list_to_cache(url_list_dir, skip_existing=True):
         print(f"Error: El archivo '{url_list_dir}' no se encontró.")
     except Exception as e:
         print(f"Ocurrió un error al leer el archivo: {str(e)}")
-
 
 # It will delete the conent of the cache directory files and subdirectories included.
 # This funcion will only work in unix env.
