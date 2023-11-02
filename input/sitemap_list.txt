@@ -1,1 +1,6 @@
 https://www.becosan.com/page-sitemap.xml
+https://www.becosan.com/post-sitemap.xml
+https://www.becosan.com/page-sitemap.xml
+https://www.becosan.com/projects_becosan-sitemap.xml
+https://www.becosan.com/representative-sitemap.xml
+https://www.becosan.com/faq-sitemap.xml

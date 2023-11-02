@@ -143,4 +143,3 @@ def analyze_filelist(file_dir):
 
 if __name__ == "__main__":
     analyze_filelist(URLS_WHERE_SEARCH_DIR)
-    # print(is_href_already_in_file("https://kairosarquitectura.com/servicios/"))

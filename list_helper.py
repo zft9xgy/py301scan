@@ -19,7 +19,10 @@ import configparser
 # reset_file(file)
 # get_list_from_file()
 
-# Esta funcion
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+URLS_WHERE_SEARCH_DIR = config['LINK_SCANNER']['URLS_WHERE_SEARCH_DIR']
 
 
 def is_url_in_file(url, file_dir):
@@ -58,7 +61,7 @@ def save_url_to_filelist(url, URL_LIST_DIR="./input/urls_where_search.txt"):
         print(f"Ocurrió un error al guardar la URL: {str(e)}")
 
 
-def save_urls_to_filelist(urls, file_dir):
+def save_urls_to_filelist(urls, file_dir=URLS_WHERE_SEARCH_DIR):
     for url in urls:
         save_url_to_filelist(url, file_dir)
 
@@ -106,7 +109,7 @@ def save_urls_from_sitemaps_to_list(SITEMAP_FILELIST_PATH="./input/sitemap_list.
                 # Procesa la URL aquí, por ejemplo, imprímela
                 print("Analizando sitemap:", sitemap_url)
                 urls = get_urls_from_sitemap(sitemap_url)
-                save_urls_to_filelist(urls, SITEMAP_FILELIST_PATH)
+                save_urls_to_filelist(urls)
     except FileNotFoundError:
         print(f"Error: El archivo '{SITEMAP_FILELIST_PATH}' no se encontró.")
     except Exception as e:
