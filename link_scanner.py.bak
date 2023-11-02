@@ -1,16 +1,10 @@
 import configparser
-import cachelib
+import libcache
+import list_helper
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 import requests
 from tqdm import tqdm
-
-
-def extract_domain(url):
-    parsed_url = urlparse(url)
-    domain = parsed_url.netloc
-    return domain
-
 
 # FROM LISTA DE URLS CACHEADAS
 # for Toma una a una las urls y las analiza.
@@ -19,12 +13,20 @@ def extract_domain(url):
 # analiza los codigos de estado
 # si el codigo es 301, lo escribe en una lista
 
-
 URLS_TO_FIND_DIR = "./input/urls_to_find.txt"
 URLS_WHERE_SEARCH_DIR = "./input/urls_where_search.txt"
+OUTPUT_SCAN_LIST_DIR = "./urls.txt"
 
+
+# This function extract the domain for a given url
+def extract_domain(url):
+    parsed_url = urlparse(url)
+    domain = parsed_url.netloc
+    return domain
 
 # Read the content of file txt with one url per line and return a python list
+
+
 def read_file_to_list(file_path):
     try:
         with open(file_path, 'r') as file:
@@ -52,35 +54,11 @@ def get_status_code(url):
 
 
 def get_soup_from_url(url):
-    html_file_dir = cachelib.get_filepath_hashmd5(url)
+    html_file_dir = libcache.get_filepath_hashmd5(url)
     with open(html_file_dir, 'r', encoding='utf-8') as file:
         content = file.read()
     soup = BeautifulSoup(content, 'lxml')
     return soup
-
-
-def append_url_to_file(url, FILE_PATH="./urls_301.txt"):
-    try:
-        # Leer las URLs existentes del archivo
-        with open(FILE_PATH, 'r') as file:
-            existing_urls = file.read().splitlines()
-
-        # Verificar si la URL ya existe en la lista
-        if url not in existing_urls:
-            # Si la URL no existe, añadirla al archivo
-            with open(FILE_PATH, 'a') as file:
-                file.write(url + '\n')
-                print("URL añadida:", url)
-        else:
-            print("La URL ya existe en el archivo:", url)
-
-    except FileNotFoundError:
-        # Si el archivo no existe, crearlo y añadir la URL
-        with open(FILE_PATH, 'w') as file:
-            file.write(url)  # + '\n')
-            print("Archivo y URL creados:", FILE_PATH, url)
-    except Exception as e:
-        print("Ocurrió un error al guardar la URL:", str(e))
 
 
 def find_301_links_in_url(url):
@@ -92,24 +70,12 @@ def find_301_links_in_url(url):
     contains_hash = config.getboolean('FILTER_CRITERIA', 'contains_hash')
     starts_with_hash = config.getboolean('FILTER_CRITERIA', 'starts_with_hash')
 
-    if not cachelib.is_url_in_cache(url):
-        cachelib.save_url_to_cache(url)
+    if not libcache.is_url_in_cache(url):
+        libcache.save_url_to_cache(url)
     soup = get_soup_from_url(url)
 
     links = soup.find_all('a')
-    # for link in links:
-    #     ahref = link.get('href')
-    #     if not ahref:
-    #         continue  # Saltar si el enlace es None o vacío
 
-    #     if any(ahref.startswith(prefix) for prefix in excluded_prefixes) or (starts_with_hash and ahref.startswith("#")) or (contains_hash and "#" in ahref):
-    #         continue  # Saltar enlaces que cumplan con los criterios
-
-    #     # print(ahref)
-    #     if get_status_code(ahref) == 301:
-    #         print(get_status_code(ahref), ahref)
-    #         append_url_to_file(ahref)
-    # Crea una barra de progreso para el bucle interno
     with tqdm(total=len(links)) as pbar:
         for link in links:
             ahref = link.get('href')
@@ -123,19 +89,12 @@ def find_301_links_in_url(url):
 
             if get_status_code(ahref) == 301:
                 print(get_status_code(ahref), ahref)
-                append_url_to_file(ahref)
+                list_helper.save_url_to_filelist(ahref, OUTPUT_SCAN_LIST_DIR)
             # Incrementa la barra de progreso en 1 unidad por cada enlace procesado
             pbar.update(1)
 
         # Aquí puedes procesar los enlaces que no se saltaron
         # Por ejemplo, imprimirlos o realizar alguna otra acción
-
-
-# def analyze_list(URLS_WHERE_SEARCH_DIR="./input/urls_where_search.txt"):
-#     urls_where_search_list = read_file_to_list(URLS_WHERE_SEARCH_DIR)
-
-#     for url in urls_where_search_list:
-#         find_301_links_in_url(url)
 
 
 def analyze_list(URLS_WHERE_SEARCH_DIR="./input/urls_where_search.txt"):
@@ -150,3 +109,13 @@ def analyze_list(URLS_WHERE_SEARCH_DIR="./input/urls_where_search.txt"):
 
 
 analyze_list()
+
+
+# Analizar lista - main
+#  urls = get_urls_from_filelist(lista.txt)
+# for url in urls
+#   links = get_all_links_from_url(url) # lista con todos los links en esa url
+#   for link in links
+#       ahref = link.get('href')
+#       if not ahref_already_existe_in_file
+#           f.write(get_status_code(href),href)

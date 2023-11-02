@@ -1,6 +1,5 @@
-import cachelib
-import get_urls_from_sitemap_list as gsmap
-import scan_301
+import libcache
+import link_scanner
 
 # extract the url from sitemap and save it to urls_where_search
 # gsmap.get_urls_from_sitemap_list()
@@ -11,4 +10,4 @@ import scan_301
 
 
 # find for 301 links inside each url in the list
-scan_301.analyze_list()
+link_scanner.analyze_list()

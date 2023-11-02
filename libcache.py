@@ -10,6 +10,13 @@ Fecha de creación: 31 de octubre de 2023
 Versión: 1.0
 """
 
+# is_url_in_cache(url)
+# get_filepath_hashmd5(url, CACHE_DIR="./cache")
+# save_url_to_cache(url)
+# delete_url_from_cache(url)
+# save_url_list_to_cache(url_list_dir, skip_existing=True)
+# reset_cache(CACHE_DIR="./cache")
+
 import os
 import requests
 import hashlib
@@ -40,7 +47,7 @@ def save_url_to_cache(url):
 
 
 # Check if urls exist, if so, delete it from cache
-# TODO hacerla mas robusta teniendo en cuenta windows, linux y mac
+# TO DO hacerla mas robusta teniendo en cuenta windows, linux y mac
 def delete_url_from_cache(url):
     if is_url_in_cache(url):
         os.system(f"rm {get_filepath_hashmd5(url)}")

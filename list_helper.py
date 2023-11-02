@@ -3,7 +3,7 @@
 
 """
 Nombre del script: list_helper.py
-Descripción: Este script proporciona las funciones necesarias para extraer las urls desde una lista de sitemaps.xml
+Descripción: La idea con este scripts es proporcionar una libreria para trabajar con listas de python y ficheros de text con las urls.
 Autor: Rafael Cosquiere - zft9xgy
 Github: https://github.com/zft9xgy/py301scan
 Fecha de creación: 31 de octubre de 2023
@@ -15,11 +15,23 @@ import requests
 from bs4 import BeautifulSoup
 import configparser
 
+# append_single_url_to_file(url,file_dir)
+# reset_file(file)
+# get_list_from_file()
 
-#  Save the urls to the list.
-def save_urls_to_filelist(urls):
-    for url in urls:
-        save_url_to_list(url)
+# Esta funcion
+
+
+def is_url_in_file(url, file_dir):
+    try:
+        with open(file_dir, 'r') as file:
+            existing_urls = file.read().splitlines()
+        return url in existing_urls
+    except FileNotFoundError:
+        return False  # El archivo no existe, por lo que la URL tampoco puede estar presente
+    except Exception as e:
+        print("Ocurrió un error al verificar la URL:", str(e))
+        return False
 
 
 def save_url_to_filelist(url, URL_LIST_DIR="./input/urls_where_search.txt"):
@@ -44,6 +56,11 @@ def save_url_to_filelist(url, URL_LIST_DIR="./input/urls_where_search.txt"):
             print(f"Archivo y URL creados: {URL_LIST_DIR} - {url}")
     except Exception as e:
         print(f"Ocurrió un error al guardar la URL: {str(e)}")
+
+
+def save_urls_to_filelist(urls, file_dir):
+    for url in urls:
+        save_url_to_filelist(url, file_dir)
 
 
 def load_extensions_to_ignore():
@@ -77,9 +94,9 @@ def get_urls_from_sitemap(sitemap_url):
 
 
 # This function will take the sitemaps from the sitemap list one by one and extract the urls
-def save_urls_from_sitemaps_to_list(SITEMAP_LIST_DIR="./input/sitemap_list.txt"):
+def save_urls_from_sitemaps_to_list(SITEMAP_FILELIST_PATH="./input/sitemap_list.txt"):
     try:
-        with open(SITEMAP_LIST_DIR, 'r') as sitemaps_list:
+        with open(SITEMAP_FILELIST_PATH, 'r') as sitemaps_list:
             lines = sitemaps_list.readlines()
             for line in lines:
                 sitemap_url = line.strip()
@@ -89,13 +106,25 @@ def save_urls_from_sitemaps_to_list(SITEMAP_LIST_DIR="./input/sitemap_list.txt")
                 # Procesa la URL aquí, por ejemplo, imprímela
                 print("Analizando sitemap:", sitemap_url)
                 urls = get_urls_from_sitemap(sitemap_url)
-                save_urls_to_list(urls)
+                save_urls_to_filelist(urls, SITEMAP_FILELIST_PATH)
     except FileNotFoundError:
-        print(f"Error: El archivo '{SITEMAP_LIST_DIR}' no se encontró.")
+        print(f"Error: El archivo '{SITEMAP_FILELIST_PATH}' no se encontró.")
     except Exception as e:
         print(f"Ocurrió un error al leer el archivo: {str(e)}")
 
 
-if __name__ == "__main__":
-    print("Empezando")
-    save_urls_from_sitemaps_to_list()
+# Return a python list from a file, where each line is an element.
+def get_list_from_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            lines = file.read().splitlines()
+        return lines
+    except FileNotFoundError:
+        print(f"Error: El archivo '{file_path}' no se encontró.")
+        return []
+    except Exception as e:
+        print(f"Ocurrió un error al leer el archivo: {str(e)}")
+        return []
+
+
+# if __name__ == "__main__":
