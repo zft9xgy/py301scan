@@ -85,7 +85,8 @@ if response.lower().strip() == 'no':
     exit()
 
 # Solicita al usuario el nombre para el archivo CSV
-csv_filename_input = input(f"Introduzca el nombre del archivo CSV (presione 'Enter' para usar '{CSV_DEFAULT_NAME}' por defecto): ")
+csv_filename_input = input(
+    f"Introduzca el nombre del archivo CSV (presione 'Enter' para usar '{CSV_DEFAULT_NAME}' por defecto): ")
 
 
 # Solicita al usuario el nombre para el archivo CSV
