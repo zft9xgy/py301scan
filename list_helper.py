@@ -49,8 +49,8 @@ def save_url_to_filelist(url, URL_LIST_DIR="./input/urls_where_search.txt"):
             with open(URL_LIST_DIR, 'a') as file:
                 file.write(url.strip() + '\n')
                 print("Added url:", url)
-        else:
-            print("skip: url already on list:", url)
+        # else:
+            # print("skip: url already on list:", url)
 
     except FileNotFoundError:
         # Si el archivo no existe, crearlo y añadir la URL
@@ -92,6 +92,7 @@ def get_urls_from_sitemap(sitemap_url):
         if any(url.endswith(ext) for ext in extensions_to_ignore):
             continue  # Ignorar la URL si termina con una extensión prohibida
         extracted_urls.append(url)  # Agregar la URL a la lista
+        print("Added url to the list:", url)
 
     return extracted_urls  # Devolver la lista de URLs extraídas
 
@@ -107,7 +108,7 @@ def save_urls_from_sitemaps_to_list(SITEMAP_FILELIST_PATH="./input/sitemap_list.
                     # print("Ignorando sitemap:", sitemap_url)
                     continue
                 # Procesa la URL aquí, por ejemplo, imprímela
-                print("Analizando sitemap:", sitemap_url)
+                # print("Analizando sitemap:", sitemap_url)
                 urls = get_urls_from_sitemap(sitemap_url)
                 save_urls_to_filelist(urls)
     except FileNotFoundError:

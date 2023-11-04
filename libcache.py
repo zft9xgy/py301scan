@@ -17,6 +17,8 @@ Versión: 1.0
 import os
 import requests
 import hashlib
+from tqdm import tqdm
+import shutil
 
 
 # It will if url is already in cache.
@@ -41,7 +43,6 @@ def save_url_to_cache(url):
     filepath = get_filepath_hashmd5(url)
     with open(filepath, 'w', encoding='utf-8') as file:
         file.write(content)
-
 
 
 # Check if urls exist, if so, delete it from cache
@@ -74,5 +75,12 @@ def save_url_list_to_cache(url_list_dir, skip_existing=True):
 
 # It will delete the conent of the cache directory files and subdirectories included.
 # This funcion will only work in unix env.
+
+
 def reset_cache(CACHE_DIR="./cache"):
-    os.system(f"rm -rf {CACHE_DIR}/*")
+    try:
+        shutil.rmtree(CACHE_DIR)
+        os.mkdir(CACHE_DIR)
+        print(f"Contents of the '{CACHE_DIR}' directory cleared successfully.")
+    except Exception as e:
+        print(f"Error clearing the '{CACHE_DIR}' directory: {str(e)}")

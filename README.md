@@ -11,3 +11,4 @@ The `py301scan` project aims to help users manage and rectify URLs on large or m
 - alpha-find.py, ask for cache use.
 - cache directory, one cache directory per website maybe?
 - eliminar concurrencia, parece ser que va mas rapido con un nucleo y es mas sencillo
+- Añadir concurrencia con futures modulo en libcache y en link scanner.
