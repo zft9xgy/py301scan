@@ -1,8 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 """
-Nombre del script: list_helper.py
+Nombre del script: helper.py
 Descripción: La idea con este scripts es proporcionar una libreria para trabajar con listas de python y ficheros de text con las urls.
 Autor: Rafael Cosquiere - zft9xgy
 Github: https://github.com/zft9xgy/py301scan
@@ -22,10 +19,12 @@ import configparser
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-URLS_WHERE_SEARCH_DIR = config['LINK_SCANNER']['URLS_WHERE_SEARCH_DIR']
+URLS_LIST = config['DEFAULT']['INPUT_URLS_LIST']
+SITEMAPS_LIST = config['DEFAULT']['INPUT_SITEMAPS_LIST']
 
 
-def is_url_in_file(url, file_dir):
+# Return True if url is found on file_dir, False if not
+def is_url_in_file(url, file_dir=URLS_LIST):
     try:
         with open(file_dir, 'r') as file:
             existing_urls = file.read().splitlines()
@@ -37,35 +36,33 @@ def is_url_in_file(url, file_dir):
         return False
 
 
-def save_url_to_filelist(url, URL_LIST_DIR="./input/urls_where_search.txt"):
+# Append url to the filelist, not checking if exsit or not. Just append.
+# This function could be implemented with futures concurrence
+def save_url_to_filelist(url, file_dir=URLS_LIST):
     try:
-        # Leer las URLs existentes del archivo
-        with open(URL_LIST_DIR, 'r') as file:
-            existing_urls = file.read().splitlines()
-
-        # Verificar si la URL ya existe en la lista
-        if url not in existing_urls:
-            # Si la URL no existe, añadirla al archivo
-            with open(URL_LIST_DIR, 'a') as file:
-                file.write(url.strip() + '\n')
-                print("Added url:", url)
-        # else:
-            # print("skip: url already on list:", url)
+        with open(file_dir, 'a') as file:
+            file.write(url.strip() + '\n')
+            print("Added url:", url)
 
     except FileNotFoundError:
         # Si el archivo no existe, crearlo y añadir la URL
-        with open(URL_LIST_DIR, 'w') as file:
+        with open(file_dir, 'w') as file:
             file.write(url + '\n')
-            print(f"Archivo y URL creados: {URL_LIST_DIR} - {url}")
+            print(f"Archivo y URL creados: {file_dir} - {url}")
+
     except Exception as e:
         print(f"Ocurrió un error al guardar la URL: {str(e)}")
 
 
-def save_urls_to_filelist(urls, file_dir=URLS_WHERE_SEARCH_DIR):
+
+# Iterate line by line and save each url to filelist
+def save_urls_to_filelist(urls, file_dir=URLS_LIST):
     for url in urls:
         save_url_to_filelist(url, file_dir)
 
 
+# Load de extension to ignore from config file. 
+# This extension will be use to filter when getting urls from sitemap or filelist of urls
 def load_extensions_to_ignore():
     config = configparser.ConfigParser()
     config.read('config.ini')
@@ -77,7 +74,8 @@ def load_extensions_to_ignore():
 
 
 # this function get a puython list which contain all the urls find the provide sitemap
-def get_urls_from_sitemap(sitemap_url):
+# return a python list with all the urls from a given sitemap
+def get_urls_from_sitemap_ignoring_extension(sitemap_url):
     response = requests.get(sitemap_url)
     soup = BeautifulSoup(response.text, "xml")
     loc_tags = soup.find_all("loc")
@@ -97,22 +95,36 @@ def get_urls_from_sitemap(sitemap_url):
     return extracted_urls  # Devolver la lista de URLs extraídas
 
 
+# this function get a puython list which contain all the urls find the provide sitemap
+# return a python list with all the urls from a given sitemap
+def get_urls_from_sitemap(sitemap_url):
+    response = requests.get(sitemap_url)
+    soup = BeautifulSoup(response.text, "xml")
+    loc_tags = soup.find_all("loc")
+
+    extracted_urls = []  # Crear una lista para almacenar las URLs extraídas
+
+    for loc in loc_tags:
+        url = loc.text.lower()  # Convertir a minúsculas para hacerlo case-insensitive
+        extracted_urls.append(url)  # Agregar la URL a la lista
+        print("Added url to the list:", url)
+
+    return extracted_urls  # Devolver la lista de URLs extraídas
+
 # This function will take the sitemaps from the sitemap list one by one and extract the urls
-def save_urls_from_sitemaps_to_list(SITEMAP_FILELIST_PATH="./input/sitemap_list.txt"):
+def save_urls_from_sitemaps_file_to_file(sitemap_list_dir=SITEMAPS_LIST,url_list_dir=URLS_LIST):
     try:
-        with open(SITEMAP_FILELIST_PATH, 'r') as sitemaps_list:
+        with open(sitemap_list_dir, 'r') as sitemaps_list:
             lines = sitemaps_list.readlines()
             for line in lines:
                 sitemap_url = line.strip()
                 if not sitemap_url or sitemap_url.startswith("#"):
-                    # print("Ignorando sitemap:", sitemap_url)
+                    # Si se trata de una linea en blanco o empieza con # ignora la linea y continua
                     continue
-                # Procesa la URL aquí, por ejemplo, imprímela
-                # print("Analizando sitemap:", sitemap_url)
-                urls = get_urls_from_sitemap(sitemap_url)
-                save_urls_to_filelist(urls)
+                urls = get_urls_from_sitemap_ignoring_extension(sitemap_url)
+                save_urls_to_filelist(urls,url_list_dir)
     except FileNotFoundError:
-        print(f"Error: El archivo '{SITEMAP_FILELIST_PATH}' no se encontró.")
+        print(f"Error: El archivo '{sitemap_list_dir}' no se encontró.")
     except Exception as e:
         print(f"Ocurrió un error al leer el archivo: {str(e)}")
 
@@ -130,5 +142,3 @@ def get_list_from_file(file_path):
         print(f"Ocurrió un error al leer el archivo: {str(e)}")
         return []
 
-
-# if __name__ == "__main__":

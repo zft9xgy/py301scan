@@ -1,6 +1,6 @@
 import configparser
 import libcache
-import list_helper
+import helper
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 import requests
@@ -11,9 +11,8 @@ import time
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-URLS_WHERE_SEARCH_DIR = config['LINK_SCANNER']['URLS_WHERE_SEARCH_DIR']
-OUTPUT_SCAN_LIST_DIR = config['LINK_SCANNER']['OUTPUT_SCAN_LIST_DIR']
-
+URLS_DIR = config['DEFAULT']['INPUT_URLS_LIST']
+OUTPUT_SCAN_DIR = config['DEFAULT']['OUTPUT_RAW']
 
 # This function extract the domain for a given url
 def extract_domain(url):
@@ -38,28 +37,15 @@ def get_status_code(url):
 
 # Asuming the url is in cache already.
 # Da error si la url no esta en cache, comtemplar esto #todo
-def get_soup_from_url(url):
-
-    # si no url en cahce, la crea.
-    if not libcache.is_url_in_cache(url):
-        libcache.save_url_to_cache(url)
+def get_soup_from_cache_url(url):
 
     # get html dir
     html_file_dir = libcache.get_filepath_hashmd5(url)
     with open(html_file_dir, 'r', encoding='utf-8') as file:
         content = file.read()
     soup = BeautifulSoup(content, 'lxml')
+
     return soup
-
-
-# Analizar lista - main
-#  urls = get_urls_from_filelist(lista.txt)
-# for url in urls
-#   links = get_all_links_from_url(url) # lista con todos los links en esa url
-#   for link in links
-#       ahref = link.get('href')
-#       if not ahref_already_existe_in_file
-#           f.write(get_status_code(href),href)
 
 def is_href_contain_blacklist_elements(href):
     # Lee la configuración desde el archivo config.ini
@@ -91,25 +77,43 @@ def is_href_contain_blacklist_elements(href):
 
 def get_links_from_url(url):
     links = []
-    soup = get_soup_from_url(url)
+    soup = get_soup_from_cache_url(url)
     links = soup.find_all('a')
     return links
 
 
+
+def get_link_main_location(link):
+    if link.find_parent("header"):
+        return "header"
+    elif link.find_parent("footer"):
+        return "footer"
+    elif link.find_parent("body"):
+        return "body"
+    else:
+        return "other"
+
 # appen
-def append_link_to_file(link):
-    filepath = OUTPUT_SCAN_LIST_DIR
+def append_link_data_to_file(link,source_url):
+    filepath = OUTPUT_SCAN_DIR
     with open(filepath, 'a', encoding='utf-8') as file:
         file.write(str(get_status_code(link.get('href'))))
         file.write(",")
         file.write(link.get('href'))
+        file.write(",")
+        file.write(source_url)
+        file.write(",")
+        file.write(link.text)
+        file.write(",")
+        file.write(get_link_main_location(link))
         file.write("\n")
 
+        #"status_code,link,source_url,anchor,tag_location"
 
-def is_href_already_in_file(href):
-    filepath = OUTPUT_SCAN_LIST_DIR
+
+def is_href_already_in_file(href,file_dir):
     # print("Filepath:", filepath)
-    with open(filepath, 'r', encoding='utf-8') as file:
+    with open(file_dir, 'r', encoding='utf-8') as file:
         line = file.read().splitlines()
         for row in line:
             row = row.split(',')
@@ -120,7 +124,7 @@ def is_href_already_in_file(href):
 
 
 def analyze_filelist(file_dir):
-    urls = list_helper.get_list_from_file(file_dir)
+    urls = helper.get_list_from_file(file_dir)
     print("Analizando fichero:", file_dir)
     print("Total de urls a analizar:", len(urls), "\n")
 
@@ -134,12 +138,12 @@ def analyze_filelist(file_dir):
             if is_href_contain_blacklist_elements(href):
                 # print("skipping:blacklist", href)
                 continue
-            if is_href_already_in_file(href):
+            if is_href_already_in_file(href,file_dir):
                 # print("skipping:already in list", href)
                 continue
             # print(href)
-            append_link_to_file(link)
+            append_link_data_to_file(link,url)
 
 
 if __name__ == "__main__":
-    analyze_filelist(URLS_WHERE_SEARCH_DIR)
+    analyze_filelist(OUTPUT_SCAN_DIR)

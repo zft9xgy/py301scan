@@ -1,15 +1,27 @@
 import libcache
 import link_scanner
-import list_helper as helper
+import helper
+import configparser
 
 
 def main():
+
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+
+    URLS_LIST = config['DEFAULT']['INPUT_URLS_LIST']
+    SITEMAPS_LIST = config['DEFAULT']['INPUT_SITEMAPS_LIST']
+
     # Explicar al usuario que debe de introducir varias urls en el archivo ./input/sitemap_list.txt
     # o la lista de urls_where_search.txt
     print("Este programa analizara un conjunto de URLs dado para encontrar en cada una de esas URLs, enlaces con codigos de errores 301.")
     # print("Para ello, introduzca las URls a analizar en el archivo 'input/urls_where_search.txt'")
-    print("Para ello, introduzca las url/s del sitemap/s en el archivo 'input/sitemap_list.txt'", "\n")
-    print("Se extraeran todas las urls contenidas en el/los sitemaps.")
+    print("Para ello, introduzca las url/s del sitemap/s en el archivo 'input/sitemap_list.txt'")
+    print("Se extraeran todas las urls contenidas en el/los sitemaps listado a continuación:","\n")
+
+    sitemaps = helper.get_list_from_file(SITEMAPS_LIST)
+    for site in sitemaps:
+        print(site)
 
     # Confirm execution
     confirm = input(
@@ -19,16 +31,16 @@ def main():
         print("Operación cancelada.")
         exit()
 
+
     # extract the url from sitemap and save it to urls_where_search
     print("\n", "#####################################", "\n")
-    helper.save_urls_from_sitemaps_to_list()
+    helper.save_urls_from_sitemaps_file_to_file(SITEMAPS_LIST,URLS_LIST)
     print("\n", "#####################################", "\n")
-    url_list_dir = "input/urls_where_search.txt"
 
     # create cache
     print("Se va a proceder con creación de la cache, tenga en cuenta que esto puede demorar un poco dependiendo del numero de urls", "\n")
     print("Número de URls que se van a cachear:", len(
-        helper.get_list_from_file(url_list_dir)))
+        helper.get_list_from_file(URLS_LIST)))
 
     # Confirm execution
     print("Desea resetear la cache?")
@@ -42,7 +54,7 @@ def main():
         print("Cache reseteada.")
 
     print("\n", "#####################################", "\n")
-    libcache.save_url_list_to_cache(url_list_dir)
+    libcache.save_url_list_to_cache(URLS_LIST)
     print("\n", "#####################################", "\n")
 
     print("Se va a proceder con el analisis:", "\n")
@@ -55,7 +67,7 @@ def main():
 
     # find for 301 links inside each url in the list
     print("\n", "#####################################", "\n")
-    link_scanner.analyze_filelist(url_list_dir)
+    link_scanner.analyze_filelist(URLS_LIST)
     print("\n", "#####################################", "\n")
 
     # link_scanner_futures.analyze_filelist(url_list_dir)

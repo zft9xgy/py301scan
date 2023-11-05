@@ -7,13 +7,6 @@ Fecha de creación: 31 de octubre de 2023
 Versión: 1.0
 """
 
-# is_url_in_cache(url)
-# get_filepath_hashmd5(url, CACHE_DIR="./cache")
-# save_url_to_cache(url)
-# delete_url_from_cache(url)
-# save_url_list_to_cache(url_list_dir, skip_existing=True)
-# reset_cache(CACHE_DIR="./cache")
-
 import os
 import requests
 import hashlib
@@ -38,6 +31,7 @@ def get_filepath_hashmd5(url, CACHE_DIR="./cache"):
 
 # Save url to cache, not checking if already exist, just create. If exist, it will override it.
 # this function will also
+# TODO aque se realiza un request, aprovechar esto en el futuro para extraer mas info y no tener que hacer tantas request
 def save_url_to_cache(url):
     content = requests.get(url).text
     filepath = get_filepath_hashmd5(url)
@@ -59,9 +53,8 @@ def save_url_list_to_cache(url_list_dir, skip_existing=True):
     try:
         with open(url_list_dir, 'r') as file_list:
             lines = file_list.readlines()
-            for line in lines:
+            for line in tqdm(lines):
                 url = line.strip()
-                # Procesa la URL aquí, por ejemplo, imprímela
                 if skip_existing and is_url_in_cache(url):
                     print("Skipping: url already in cache:", url)
                     continue

@@ -7,8 +7,6 @@ The `py301scan` project aims to help users manage and rectify URLs on large or m
 
 ## TODO
 
-- develop 301 link finder
-- alpha-find.py, ask for cache use.
-- cache directory, one cache directory per website maybe?
-- eliminar concurrencia, parece ser que va mas rapido con un nucleo y es mas sencillo
-- Añadir concurrencia con futures modulo en libcache y en link scanner.
+- main.py informar sobre que sitemaps estan en la lista.
+- progress bar for cache
+- fallo al obtener anchor text desde link_Scanner, se almacena mal en raw_scan

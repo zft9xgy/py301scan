@@ -1,8 +1,9 @@
 import shutil
 import os
+import configparser
 
 
-# Clear the cache directory
+# delete directory and create again
 def clear_cache(directory):
     try:
         shutil.rmtree(directory)
@@ -23,17 +24,20 @@ def reset_csv(file):
 
 if __name__ == "__main__":
 
-    # Cache directory path
-    cache_directory = "./cache"
+    config = configparser.ConfigParser()
+    config.read('./config.ini')
+
+    CACHE_PATH = config['DEFAULT']['CACHE_PATH']
+    INPUT_URLS_LIST = config['DEFAULT']['INPUT_URLS_LIST']
+    INPUT_SITEMAPS_LIST = config['DEFAULT']['INPUT_SITEMAPS_LIST']
+    OUTPUT_RAW = config['DEFAULT']['OUTPUT_RAW']
+
     # Clear the cache directory
-    clear_cache(cache_directory)
+    clear_cache(CACHE_PATH)
 
-    # CSV file path to reset
-    csv_file = "./csv/raw_scan.csv"
     # Reset the CSV file
-    reset_csv(csv_file)
+    reset_csv(OUTPUT_RAW)
 
-    # File list file path to reset
-    list_file = "./input/urls_where_search.txt"
-    # Reset the CSV file
-    reset_csv(list_file)
+    # Reset the lists file
+    reset_csv(INPUT_URLS_LIST)
+    reset_csv(INPUT_SITEMAPS_LIST)
