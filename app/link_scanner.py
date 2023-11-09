@@ -8,15 +8,13 @@ Versión: 1.0
 Descrición:
             Este scipt tiene como objetivo analizar una lista de urls una a una, para dar como resultado un csv que reporte los codigos de estado 
             de cada una.
-            Es decir:
 
-            parametros de entrada, una file_dir con la lista de urls a analizar
-            parametros de salido. escribe el resultado del analisis en csv/raw_scan.csv
+            parametros de entrada: una file_dir con la lista de urls a analizar
+            parametros de salida: escribe el resultado del analisis en csv/raw_scan.csv
 
             Para ello toma las urls del fichero, una por linea y las almacena en una lista.
             Itera por ellas analizando cada url, tomando el contenido de esta de la cache.
             Buscar internamente todos los enlaces (links) que esta url contiene en su codigo html.
-            Y reporta los codigos de error de los mismos.
 
 
             Consideraciones: 
@@ -33,7 +31,6 @@ from bs4 import BeautifulSoup
 import requests
 from tqdm import tqdm
 import time
-from icecream import ic
 
 
 # Se obtienen los direciones de las lista de entrada y la direccion del csv de salida

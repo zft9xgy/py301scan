@@ -8,23 +8,11 @@ Fecha de creación: 09 de noviembre de 2023
 Versión: 1.0
 """
 
-import shutil
-import os
 import configparser
 
 
-# delete directory and create again
-def clear_cache(directory):
-    try:
-        shutil.rmtree(directory)
-        os.mkdir(directory)
-        print(f"Contents of the '{directory}' directory cleared successfully.")
-    except Exception as e:
-        print(f"Error clearing the '{directory}' directory: {str(e)}")
-
-
 # Reset the CSV file
-def reset_csv(file):
+def clean_file(file):
     try:
         open(file, "w").close()
         print(f"File '{file}' reset successfully.")
@@ -42,12 +30,10 @@ if __name__ == "__main__":
     INPUT_SITEMAPS_LIST = config['DEFAULT']['INPUT_SITEMAPS_LIST']
     OUTPUT_RAW = config['DEFAULT']['OUTPUT_RAW']
 
-    # Clear the cache directory
-    clear_cache(CACHE_PATH)
 
     # Reset the CSV file
-    reset_csv(OUTPUT_RAW)
+    clean_file(OUTPUT_RAW)
 
     # Reset the lists file
-    reset_csv(INPUT_URLS_LIST)
-    reset_csv(INPUT_SITEMAPS_LIST)
+    clean_file(INPUT_URLS_LIST)
+    clean_file(INPUT_SITEMAPS_LIST)

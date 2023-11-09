@@ -55,8 +55,11 @@ def save_url_to_filelist(url, file_dir=URLS_LIST):
 
 
 # Iterate line by line and save each url to filelist
-def save_urls_to_filelist(urls, file_dir=URLS_LIST):
+def save_urls_to_filelist(urls, file_dir=URLS_LIST,skip_existing=True):
     for url in urls:
+        if skip_existing and is_url_in_file(url,file_dir):
+            print("Skipping, url already in file:",url)
+            continue
         save_url_to_filelist(url, file_dir)
 
 
@@ -111,7 +114,7 @@ def get_urls_from_sitemap(sitemap_url):
     return extracted_urls  # Devolver la lista de URLs extraídas
 
 # This function will take the sitemaps from the sitemap list one by one and extract the urls
-def save_urls_from_sitemaps_file_to_file(sitemap_list_dir=SITEMAPS_LIST,url_list_dir=URLS_LIST):
+def save_urls_from_sitemaps_file_to_file(sitemap_list_dir=SITEMAPS_LIST,url_list_dir=URLS_LIST,skip_existing=True):
     try:
         with open(sitemap_list_dir, 'r') as sitemaps_list:
             lines = sitemaps_list.readlines()
@@ -120,12 +123,15 @@ def save_urls_from_sitemaps_file_to_file(sitemap_list_dir=SITEMAPS_LIST,url_list
                 if not sitemap_url or sitemap_url.startswith("#"):
                     # Si se trata de una linea en blanco o empieza con # ignora la linea y continua
                     continue
+
                 urls = get_urls_from_sitemap_ignoring_extension(sitemap_url)
-                save_urls_to_filelist(urls,url_list_dir)
+                save_urls_to_filelist(urls,url_list_dir,skip_existing)
+                
     except FileNotFoundError:
         print(f"Error: El archivo '{sitemap_list_dir}' no se encontró.")
     except Exception as e:
         print(f"Ocurrió un error al leer el archivo: {str(e)}")
+
 
 
 # Return a python list from a file, where each line is an element.
@@ -140,4 +146,3 @@ def get_list_from_file(file_path):
     except Exception as e:
         print(f"Ocurrió un error al leer el archivo: {str(e)}")
         return []
-

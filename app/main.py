@@ -12,10 +12,11 @@ import libcache
 import link_scanner
 import helper
 import configparser
+import init
 
 
 def main():
-
+    init.main()
     config = configparser.ConfigParser()
     config.read('config.ini')
 
@@ -24,14 +25,17 @@ def main():
 
     # Explicar al usuario que debe de introducir varias urls en el archivo ./input/sitemap_list.txt
     # o la lista de urls_where_search.txt
-    print("Este programa analizara un conjunto de URLs dado para encontrar en cada una de esas URLs, enlaces con codigos de errores 301.")
+    print("Este programa analizara una lista de URLs dada para encontrar en cada una de esas URLs, enlaces con codigos de errores 301.")
     # print("Para ello, introduzca las URls a analizar en el archivo 'input/urls_where_search.txt'")
     print("Para ello, introduzca las url/s del sitemap/s en el archivo 'input/sitemap_list.txt'")
+    print("El programa se encargara de extraer las urls, de esos sitemaps y guardarlas en input/urls_list.txt")
+    print("\n")
     print("Se extraeran todas las urls contenidas en el/los sitemaps listado a continuación:","\n")
 
     sitemaps = helper.get_list_from_file(SITEMAPS_LIST)
     for site in sitemaps:
-        print(site)
+        print("\t",site)
+    print("\n")
 
     # Confirm execution
     confirm = input(
@@ -39,6 +43,12 @@ def main():
     print("\n")
     if confirm.lower() == "salir":
         print("Operación cancelada.")
+        exit()
+
+    # cumprueba si el archivo sitemap esta vacio
+    if (len(helper.get_list_from_file(SITEMAPS_LIST)) == 0):
+        print("!!!LISTA DE SITEMAPS VACIA!!!")
+        print("Por favor, rellene la lista y vuelva a ejecutar el programa.")
         exit()
 
 
@@ -79,6 +89,8 @@ def main():
     print("\n", "#####################################", "\n")
     link_scanner.analyze_filelist(URLS_LIST)
     print("\n", "#####################################", "\n")
+
+    print("Analisis finalizado, puede ver los resultados en el archivo csv/raw_scan.csv")
 
     # link_scanner_futures.analyze_filelist(url_list_dir)
 

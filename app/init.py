@@ -12,6 +12,29 @@ import os
 import configparser
 
 
+# Reset the file
+def clean_file(file):
+    try:
+        open(file, "w").close()
+        #print(f"File '{file}' reset successfully.")
+    except Exception as e:
+        print(f"Error resetting the '{file}' file: {str(e)}")
+
+
+def create_dir_if_not_exist(dir_dir):
+    if not os.path.exists(dir_dir):
+        os.mkdir(dir_dir)
+        #print("Creada CSV path:",dir_dir)
+
+
+def create_file_if_not_existe(file_dir):
+    if not os.path.exists(file_dir):
+        with open(file_dir, "w") as file:
+            #print("Creado output csv file:",file_dir)
+            return
+
+
+
 
 def main():
 
@@ -26,38 +49,25 @@ def main():
     OUTPUT_RAW = config['DEFAULT']['OUTPUT_RAW']
 
     # Create directories
-    if not os.path.exists(CSV_PATH):
-        os.mkdir(CSV_PATH)
-        print("Creada CSV path:",CSV_PATH)
+    create_dir_if_not_exist(CSV_PATH)
+    create_dir_if_not_exist(CACHE_PATH)
+    create_dir_if_not_exist(INPUT_PATH)
 
-    if not os.path.exists(CACHE_PATH):
-        os.mkdir(CACHE_PATH)
-        print("Creada Cache path:",CACHE_PATH)
+    create_file_if_not_existe(OUTPUT_RAW)
+    create_file_if_not_existe(INPUT_SITEMAPS_LIST)
+    create_file_if_not_existe(INPUT_URLS_LIST)
 
-    if not os.path.exists(INPUT_PATH):
-        os.mkdir(INPUT_PATH)
-        print("Creada Input path:",INPUT_PATH)
-
-    # Create default files
-    if not os.path.exists(OUTPUT_RAW):
-        with open(OUTPUT_RAW, "w") as file:
-            print("Creado output csv file:",OUTPUT_RAW)
-    
-    with open(OUTPUT_RAW,"a") as file:
-        file.write("status_code,link,source_url,anchor,tag_location" + "\n")
-        print("Output csv file, inicializado.")
-        return
+    clean_file(INPUT_URLS_LIST)
+    clean_file(OUTPUT_RAW)
 
 
-    if not os.path.exists(INPUT_SITEMAPS_LIST):
-        with open(INPUT_SITEMAPS_LIST, "w") as file:
-            print("Creada lista de sitemaps:",INPUT_SITEMAPS_LIST)
-            return
+    # escribe cabecera en csv si no existe ya
+    if os.stat(OUTPUT_RAW).st_size == 0:
+        with open(OUTPUT_RAW,"a") as file:
+            file.write("status_code,link,source_url,anchor,tag_location" + "\n")
 
-    if not os.path.exists(INPUT_URLS_LIST):
-        with open(INPUT_URLS_LIST, "w") as file:
-            print("Creada lista de urls:",INPUT_URLS_LIST)
-            return
+    print("Ready to go...")
+
 
 
 if __name__ == "__main__":

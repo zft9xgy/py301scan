@@ -56,11 +56,11 @@ def save_url_list_to_cache(url_list_dir, skip_existing=True):
             for line in tqdm(lines):
                 url = line.strip()
                 if skip_existing and is_url_in_cache(url):
-                    print("Skipping: url already in cache:", url)
+                    #print("Skipping: url already in cache:", url)
                     continue
                 else:
                     save_url_to_cache(url)
-                    print("Added to cache:", url)
+                    #print("Added to cache:", url)
     except FileNotFoundError:
         print(f"Error: El archivo '{url_list_dir}' no se encontró.")
     except Exception as e:
