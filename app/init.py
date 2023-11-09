@@ -1,5 +1,16 @@
+"""
+Nombre del script: init.py
+Descripción: Este script cumprueba que los ficheros y directorios existan y en caso de que no existan, los crea.
+Autor: Rafael Cosquiere aka zft9xgy
+Github: https://github.com/zft9xgy/py301scan
+Fecha de creación: 09 de noviembre de 2023
+Última modificación: 09 de noviembre de 2023
+Versión: 1.0
+"""
+
 import os
 import configparser
+
 
 
 def main():
@@ -31,10 +42,11 @@ def main():
     if not os.path.exists(OUTPUT_RAW):
         with open(OUTPUT_RAW, "w") as file:
             print("Creado output csv file:",OUTPUT_RAW)
-        with open(OUTPUT_RAW,"a") as file:
-            file.write("status_code,link,source_url,anchor,tag_location" + "\n")
-            print("Output csv file, inicializado.")
-            return
+    
+    with open(OUTPUT_RAW,"a") as file:
+        file.write("status_code,link,source_url,anchor,tag_location" + "\n")
+        print("Output csv file, inicializado.")
+        return
 
 
     if not os.path.exists(INPUT_SITEMAPS_LIST):

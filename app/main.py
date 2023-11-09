@@ -1,3 +1,13 @@
+"""
+Nombre del script: main.py
+Descripción:Este script guia al usuario en la ejecución principal del programa.
+Autor: Rafael Cosquiere aka zft9xgy
+Github: https://github.com/zft9xgy/py301scan
+Fecha de creación: 09 de noviembre de 2023
+Última modificación: 09 de noviembre de 2023
+Versión: 1.0
+"""
+
 import libcache
 import link_scanner
 import helper

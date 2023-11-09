@@ -1,10 +1,11 @@
 """
 Nombre del script: helper.py
-Descripción: La idea con este scripts es proporcionar una libreria para trabajar con listas de python y ficheros de text con las urls.
-Autor: Rafael Cosquiere - zft9xgy
+Descrición: Esta scripts proporciona funciones de apoyo para la ejecucion del programa. 
+            Entre ellas la de trabajar con listas de python y ficheros.
+Autor: Rafael Cosquiere aka zft9xgy
 Github: https://github.com/zft9xgy/py301scan
 Fecha de creación: 31 de octubre de 2023
-Última modificación: 31 de octubre de 2023
+Última modificación: 09 de noviembre de 2023
 Versión: 1.0
 """
 
@@ -12,10 +13,8 @@ import requests
 from bs4 import BeautifulSoup
 import configparser
 
-# append_single_url_to_file(url,file_dir)
-# reset_file(file)
-# get_list_from_file()
 
+# lectura de variables desde el archivo de configuración
 config = configparser.ConfigParser()
 config.read('config.ini')
 

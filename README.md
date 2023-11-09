@@ -7,6 +7,7 @@ The `py301scan` project aims to help users manage and rectify URLs on large or m
 
 ## TODO
 
-- main.py informar sobre que sitemaps estan en la lista.
-- progress bar for cache
-- fallo al obtener anchor text desde link_Scanner, se almacena mal en raw_scan
+link_scanner.append_link_data_to_file
+- crear funcion que obtenga el anchor, a veces link.text esta vacio
+- usar modulo csv 
+- posibilidad de crear objeto link para que sea mas simple el codigo

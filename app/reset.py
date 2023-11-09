@@ -1,3 +1,13 @@
+"""
+Nombre del script: reset.py
+Descripción: Este script elimina los directorios y los archivos y los vuelve a crear.
+Autor: Rafael Cosquiere aka zft9xgy
+Github: https://github.com/zft9xgy/py301scan
+Fecha de creación: 09 de noviembre de 2023
+Última modificación: 09 de noviembre de 2023
+Versión: 1.0
+"""
+
 import shutil
 import os
 import configparser

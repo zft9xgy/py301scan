@@ -1,5 +1,5 @@
 """
-Nombre del script: cachelib.py
+Nombre del script: libcache.py
 Descripción: El objetivo de esta libreria es proporcionar las funciones necesarias para manejar la cache.
 Autor: Rafael Cosquiere - zft9xgy
 Fecha de creación: 31 de octubre de 2023
