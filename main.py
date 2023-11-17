@@ -74,6 +74,8 @@ def clean_links(links):
             continue
         if "tel:" in href:
             continue
+        if "#" in href:
+            continue
         output.append(link)
     return output
 
@@ -133,12 +135,14 @@ if __name__ == "__main__":
     urls = uniques(urls)
 
     for url in tqdm(urls, desc="source_url", position=0):
+        print(url)
 
         links = get_links_from_single_url(url)
         links = clean_links(links)
 
         for link in tqdm(links, desc="inner_links"):
             href = link.get("href")
+            print(href)
 
             if is_href_on_ingnore_list(href, ignore_200_set):
                 continue
@@ -154,7 +158,7 @@ if __name__ == "__main__":
             link_location = get_link_main_location(link)
 
             scan_output.append(
-                [link_status, url, href, anchor_text, link_location])
+                [link_status, url, href, f'"{anchor_text}"', link_location])
 
     # reset file
     try:
