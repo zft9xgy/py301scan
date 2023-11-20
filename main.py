@@ -135,14 +135,12 @@ if __name__ == "__main__":
     urls = uniques(urls)
 
     for url in tqdm(urls, desc="source_url", position=0):
-        print(url)
 
         links = get_links_from_single_url(url)
         links = clean_links(links)
 
         for link in tqdm(links, desc="inner_links"):
             href = link.get("href")
-            print(href)
 
             if is_href_on_ingnore_list(href, ignore_200_set):
                 continue

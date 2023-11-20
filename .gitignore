@@ -1,14 +1,11 @@
 # For this projects
 .vscode/*
-
-# Exclude content from cache directory
 cache/*
-
-# Exclude content from csv directory
 csv/*
-
-# Exclude content from urls directory
+input/*
 urls/*
+
+
 
 # By default for python projects
 # Byte-compiled / optimized / DLL files
