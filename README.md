@@ -15,7 +15,7 @@ Full development will be continued in the indefinite future.
 ```sh
 git clone https://github.com/zft9xgy/py301scan.git
 cd py301scan
-pip3 install -r requirements.txt
+pip3 install -r requiriments.txt
 python3 init.py
 ```
 
